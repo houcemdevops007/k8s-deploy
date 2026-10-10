@@ -8,7 +8,7 @@ import com.cloudbees.hudson.plugins.folder.*
 
 def instance = Jenkins.get()
 
-println("=== CONFIGURING JENKINS MULTI-TENANCY WITH REAL PERMISSIONS ===")
+println("=== CONFIGURING JENKINS FULL ADMIN ACCESS FOR ALL CANDIDATES ===")
 
 // 1. Security Realm
 def hudsonRealm = new HudsonPrivateSecurityRealm(false, false, null)
@@ -40,45 +40,16 @@ def getPerm = { id ->
 
 RoleBasedAuthorizationStrategy rba = new RoleBasedAuthorizationStrategy()
 
-// 2. Admin Global Role (Real Administer permission)
+// 2. Admin Global Role (FULL ADMINISTER)
 Set<Permission> adminPerms = new HashSet<>()
 adminPerms.add(getPerm("hudson.model.Hudson.Administer"))
 Role adminRole = new Role("admin", adminPerms)
 rba.addRole(RoleType.Global, adminRole)
 rba.assignRole(RoleType.Global, adminRole, PermissionEntry.user("admin"))
 
-// 3. Candidate Global Role (Real fine-grained permissions)
+// 3. Candidate Global Role WITH ADMINISTER (Allows full plugin installation, tools config, nodes, credentials)
 Set<Permission> candidateGlobalPerms = new HashSet<>()
-[
-    "hudson.model.Hudson.Read",
-    "hudson.model.Hudson.Manage",
-    "hudson.model.Hudson.SystemRead",
-    "hudson.model.Hudson.UploadPlugins",
-    "hudson.model.Hudson.ConfigureUpdateCenter",
-    "hudson.model.Computer.Create",
-    "hudson.model.Computer.Configure",
-    "hudson.model.Computer.Connect",
-    "hudson.model.Computer.Delete",
-    "hudson.model.Computer.Disconnect",
-    "hudson.model.Computer.ExtendedRead",
-    "hudson.model.Computer.Provision",
-    "hudson.model.Computer.Build",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.Create",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.Delete",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.ManageDomains",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.Update",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.UseItem",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.UseOwn",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.View",
-    "hudson.model.View.Create",
-    "hudson.model.View.Configure",
-    "hudson.model.View.Delete",
-    "hudson.model.View.Read"
-].each { id ->
-    def p = getPerm(id)
-    if (p != null) candidateGlobalPerms.add(p)
-}
-
+candidateGlobalPerms.add(getPerm("hudson.model.Hudson.Administer"))
 Role candidateGlobalRole = new Role("candidate-global", candidateGlobalPerms)
 rba.addRole(RoleType.Global, candidateGlobalRole)
 
@@ -100,18 +71,7 @@ Set<Permission> itemPerms = new HashSet<>()
     "hudson.model.Item.Move",
     "hudson.model.Item.Read",
     "hudson.model.Item.WipeOut",
-    "hudson.model.Item.Workspace",
-    "hudson.model.Run.Artifacts",
-    "hudson.model.Run.Delete",
-    "hudson.model.Run.Replay",
-    "hudson.model.Run.Update",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.Create",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.Delete",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.ManageDomains",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.Update",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.UseItem",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.UseOwn",
-    "com.cloudbees.plugins.credentials.CredentialsProvider.View"
+    "hudson.model.Item.Workspace"
 ].each { id ->
     def p = getPerm(id)
     if (p != null) itemPerms.add(p)
@@ -137,4 +97,4 @@ instance.setAuthorizationStrategy(rba)
 }
 
 instance.save()
-println("=== JENKINS MULTI-TENANCY CONFIGURATION SUCCESSFUL! ===")
+println("=== JENKINS FULL CANDIDATE ADMINISTER CONFIGURATION SUCCESSFUL! ===")
