@@ -18,32 +18,8 @@ for i in $(seq 1 20); do
     pod-security.kubernetes.io/warn=restricted pod-security.kubernetes.io/warn-version=latest
   # 2. RBAC : ClusterRole "admin" limitée au namespace (aucun droit cluster)
   kubectl -n "$NS" create rolebinding "$U-admin" --clusterrole=admin --user="$U" --dry-run=client -o yaml | kubectl apply -f -
-  # 3. Quotas, valeurs par défaut, isolation réseau
+  # 3. Isolation réseau
   cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: ResourceQuota
-metadata: {name: tenant-quota, namespace: $NS}
-spec:
-  hard:
-    requests.cpu: "1"
-    requests.memory: 1Gi
-    limits.cpu: "2"
-    limits.memory: 2Gi
-    pods: "15"
-    persistentvolumeclaims: "5"
-    requests.storage: 10Gi
-    services.nodeports: "0"
-    services.loadbalancers: "0"
----
-apiVersion: v1
-kind: LimitRange
-metadata: {name: tenant-defaults, namespace: $NS}
-spec:
-  limits:
-  - type: Container
-    default: {cpu: 500m, memory: 512Mi}
-    defaultRequest: {cpu: 50m, memory: 64Mi}
----
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata: {name: isolate-namespace, namespace: $NS}

@@ -204,12 +204,13 @@ Quatre mécanismes, mis en place par `scripts/k8s-tenant-clusteradmin.sh` puis `
 |---|---|---|
 | Namespace | `efiadminN-ns` | labels `tenant=efiadminN`, `pod-security.kubernetes.io/enforce=baseline`, `warn=restricted` ; ni supprimable ni déprotégeable |
 | RoleBinding | `efiadminN-admin` | utilisateur `efiadminN` → ClusterRole `admin` (secrets compris) dans son namespace |
-| ResourceQuota | `tenant-quota` | voir 3.3 (marqué `tenant=platform` : l'utilisateur ne peut pas le retirer) |
-| LimitRange | `tenant-defaults` | ressources par défaut des conteneurs (protégé) |
-| NetworkPolicy | `isolate-namespace` | entrées autorisées : même namespace + Traefik (protégée) |
+| NetworkPolicy | `isolate-namespace` | entrées autorisées : même namespace + Traefik |
 | Certificat client | CN=`efiadminN`, O=`efi-tenants` | signé par la CA du cluster, valable **1 an** |
 | Kubeconfig | `efiadminN.kubeconfig` | contexte `efiadminN@revision`, namespace par défaut `efiadminN-ns` |
 | Compte Linux (master) | `efiadminN` | SSH, sans sudo, home 700, `~/.kube/config` déjà en place |
+
+> [!NOTE]
+> **Quotas et LimitRanges retirés** (demande utilisateur) : Les candidats n'ont aucune restriction de quota ni de limites par défaut sur la CPU, la mémoire, les Services `NodePort` ou `LoadBalancer`. Ils peuvent déployer tous types de services et d'applications sans blocage de quota.
 
 ### 3.3 Quotas par namespace
 
@@ -464,16 +465,28 @@ passwd efiadmin3 && chage -d 0 efiadmin3
 
 Mots de passe initiaux : identiques au nom du compte (`efiadminN` / `efiadminN`), changement imposé à la 1re connexion. Liste : `/root/k8s-users/ssh-passwords.txt` (master) et `/root/k8s-deploy/users/ssh-passwords.txt` (Infra).
 
-### 5.7 Argo CD
+### 5.7 Argo CD multi-tenants ✅
+
+Chaque candidat dispose de son propre compte Argo CD (`efiadmin1` .. `efiadmin20`) et de son projet dédié (`AppProject` `efiadminN`).
+
+| Élément | Configuration |
+|---|---|
+| Accès Web / CLI | `https://172.16.3.10:30443` |
+| Identifiants | utilisateur : `efiadminN`, mot de passe initial : `efiadminN` |
+| AppProject | `efiadminN` : restreint les déploiements à ses namespaces (`efiadminN-ns`, `efiadminN-*`, `lab-efiadminN`) |
+| RBAC (`argocd-rbac-cm`) | chaque utilisateur gère uniquement ses applications et projets (`efiadminN/*`) |
 
 ```bash
-# Mot de passe admin (root uniquement ; le secret argocd-initial-admin-secret a été supprimé)
+# Mot de passe admin cluster (root uniquement)
 cat /root/argocd-admin-password.txt
-argocd login 172.16.3.10:30443 --username admin --insecure
-argocd account update-password
+argocd login 172.16.3.10:30443 --username admin --password <mdp> --insecure --grpc-web
+
+# Re-exécuter la configuration Argo CD multi-tenants si besoin :
+scripts/k8s-argocd-tenants.sh
 ```
 
-Interface : `https://172.16.3.10:30443` (n'importe quelle IP de nœud). Argo CD possède des droits cluster-admin : **ne pas donner le compte admin aux candidats** (il contournerait la protection). Pour leur donner Argo CD : un **AppProject** par utilisateur limité à ses namespaces + comptes locaux Argo CD (évolution recommandée).
+> [!IMPORTANT]
+> Les candidats se connectent avec leur compte propre (`efiadminN`). Ils ne peuvent ni voir ni modifier les applications Argo CD des autres candidats. Garder le compte `admin` d'Argo CD strictement réservé à l'administrateur système.
 
 ### 5.8 Sauvegarde etcd (master unique : indispensable)
 
@@ -561,6 +574,7 @@ kubeadm upgrade plan && kubeadm upgrade apply v1.33.<x>
 | `/root/k8s-deploy/scripts/k8s-sshusers.sh` | comptes SSH des utilisateurs |
 | `/root/k8s-deploy/scripts/k8s-tenant-clusteradmin.sh` | modèle « admin du cluster protégé » (PSA par défaut, marquage plateforme, politique, rôle, tests) |
 | `/root/k8s-deploy/scripts/k8s-tenant-fix2.sh` | correctifs (secrets, nœuds, PV hostPath, namespaces perso) + tests |
+| `/root/k8s-deploy/scripts/k8s-argocd-tenants.sh` | configuration de la multi-tenancy Argo CD (comptes, AppProjects, RBAC) |
 | `/root/k8s-deploy/scripts/efi-tenant-protection.yaml` | ValidatingAdmissionPolicy de protection |
 | `/root/k8s-deploy/scripts/efi-tenant-rbac-sync.sh` | génération du ClusterRole `efi-tenant-admin` (master : `/usr/local/sbin/`) |
 | `/root/k8s-deploy/scripts/k8s-completion.sh` | autocomplétion |

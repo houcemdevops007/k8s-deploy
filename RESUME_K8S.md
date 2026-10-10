@@ -64,7 +64,7 @@ Récupérer le kubeconfig sur votre poste : `scp efi@172.16.3.10:.kube/config ~/
 | Stockage persistant | local-path-provisioner v0.0.37, StorageClass **`local-path` par défaut** | PVC automatiques (données dans `/opt/local-path-provisioner` du nœud) |
 | metrics-server | chart Helm, `--kubelet-insecure-tls` | `kubectl top nodes` / `top pods` |
 | Ingress | **Traefik** (DaemonSet sur les 3 workers, hostPort 80/443), IngressClass `traefik` par défaut | `http://172.16.3.11` / `.12` / `.13` |
-| Argo CD | chart argo/argo-cd + CLI `argocd` | `https://172.16.3.10:30443` (n'importe quel nœud), user `admin` |
+| Argo CD | chart argo/argo-cd + CLI `argocd` | `https://172.16.3.10:30443`, multi-tenants (`efiadmin1`..`20`) + admin |
 | Autocomplétion | bash : `kubectl` (+ alias `k`), `helm`, `argocd` | efi et root sur le master |
 
 Tests réussis : PVC créé et écrit (`persistant-OK`), Ingress `whoami.test` joignable via les 3 workers, interface Argo CD HTTP 200, `kubectl top nodes` OK. Le namespace de test a été supprimé.
@@ -111,7 +111,7 @@ Limites connues :
 
 - **Isolation réseau active** : CNI migré vers Canal (Flannel + Calico) le 10/10 à 11:33 ; trafic entre namespaces bloqué (testé). Voir TUTORIEL_KUBERNETES_REVISION.md.
 - Révocation : un certificat ne peut pas être révoqué ; pour retirer un utilisateur, le retirer du ClusterRoleBinding `efi-tenants-cluster` et supprimer `efiadminN-admin` (tutoriel 5.3).
-- Argo CD : secret `argocd-initial-admin-secret` supprimé ; mot de passe admin uniquement dans `/root/argocd-admin-password.txt` (master). Ne pas le donner aux candidats (Argo CD = cluster-admin).
+- **Argo CD multi-tenants (10/10 12:20)** : chaque candidat possède son compte web `efiadminN` (mot de passe initial `efiadminN`) et son projet `AppProject` `efiadminN`. Il peut créer/gérer ses applications dans ses namespaces (`efiadminN-ns`, `efiadminN-*`), mais il est totalement isolé des projets et applications des autres candidats. Le compte `admin` d'Argo CD reste réservé aux administrateurs (`/root/argocd-admin-password.txt`).
 - Ingress : deux utilisateurs peuvent déclarer le même nom d'hôte ; à encadrer si besoin.
 
 ## Tutoriel complet
