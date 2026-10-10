@@ -8,7 +8,7 @@ import com.cloudbees.hudson.plugins.folder.*
 
 def instance = Jenkins.get()
 
-println("=== CONFIGURING JENKINS MULTI-TENANCY ===")
+println("=== CONFIGURING JENKINS MULTI-TENANCY WITH REAL PERMISSIONS ===")
 
 // 1. Security Realm
 def hudsonRealm = new HudsonPrivateSecurityRealm(false, false, null)
@@ -40,16 +40,45 @@ def getPerm = { id ->
 
 RoleBasedAuthorizationStrategy rba = new RoleBasedAuthorizationStrategy()
 
-// 2. Admin Global Role (FULL_CONTROL)
+// 2. Admin Global Role (Real Administer permission)
 Set<Permission> adminPerms = new HashSet<>()
-adminPerms.add(Permission.FULL_CONTROL)
+adminPerms.add(getPerm("hudson.model.Hudson.Administer"))
 Role adminRole = new Role("admin", adminPerms)
 rba.addRole(RoleType.Global, adminRole)
 rba.assignRole(RoleType.Global, adminRole, PermissionEntry.user("admin"))
 
-// 3. Candidate Global Role (FULL_CONTROL allows access to Plugins, Tools, Nodes & Credentials management UI)
+// 3. Candidate Global Role (Real fine-grained permissions)
 Set<Permission> candidateGlobalPerms = new HashSet<>()
-candidateGlobalPerms.add(Permission.FULL_CONTROL)
+[
+    "hudson.model.Hudson.Read",
+    "hudson.model.Hudson.Manage",
+    "hudson.model.Hudson.SystemRead",
+    "hudson.model.Hudson.UploadPlugins",
+    "hudson.model.Hudson.ConfigureUpdateCenter",
+    "hudson.model.Computer.Create",
+    "hudson.model.Computer.Configure",
+    "hudson.model.Computer.Connect",
+    "hudson.model.Computer.Delete",
+    "hudson.model.Computer.Disconnect",
+    "hudson.model.Computer.ExtendedRead",
+    "hudson.model.Computer.Provision",
+    "hudson.model.Computer.Build",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.Create",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.Delete",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.ManageDomains",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.Update",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.UseItem",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.UseOwn",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.View",
+    "hudson.model.View.Create",
+    "hudson.model.View.Configure",
+    "hudson.model.View.Delete",
+    "hudson.model.View.Read"
+].each { id ->
+    def p = getPerm(id)
+    if (p != null) candidateGlobalPerms.add(p)
+}
+
 Role candidateGlobalRole = new Role("candidate-global", candidateGlobalPerms)
 rba.addRole(RoleType.Global, candidateGlobalRole)
 
@@ -58,7 +87,7 @@ rba.addRole(RoleType.Global, candidateGlobalRole)
     rba.assignRole(RoleType.Global, candidateGlobalRole, PermissionEntry.user(uname))
 }
 
-// 4. Item Roles per candidate (STRICT REGEX ^efiadminN($|[/-].*) guarantees folder isolation)
+// 4. Item Roles per candidate
 Set<Permission> itemPerms = new HashSet<>()
 [
     "hudson.model.Item.Build",
@@ -75,7 +104,14 @@ Set<Permission> itemPerms = new HashSet<>()
     "hudson.model.Run.Artifacts",
     "hudson.model.Run.Delete",
     "hudson.model.Run.Replay",
-    "hudson.model.Run.Update"
+    "hudson.model.Run.Update",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.Create",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.Delete",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.ManageDomains",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.Update",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.UseItem",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.UseOwn",
+    "com.cloudbees.plugins.credentials.CredentialsProvider.View"
 ].each { id ->
     def p = getPerm(id)
     if (p != null) itemPerms.add(p)
@@ -97,7 +133,6 @@ instance.setAuthorizationStrategy(rba)
     def folderName = "efiadmin" + i
     if (instance.getItem(folderName) == null) {
         instance.createProject(Folder.class, folderName)
-        println("Created folder: " + folderName)
     }
 }
 
