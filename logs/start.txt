@@ -1,0 +1,21 @@
+== 450 net0 -> newvnet, start 10:33:18
+update VM 450: -net0 virtio=BC:24:11:C1:49:B9,bridge=newvnet
+generating cloud-init ISO
+rc=0
+== 451 net0 -> newvnet, start 10:33:26
+update VM 451: -net0 virtio=BC:24:11:3B:CA:83,bridge=newvnet
+generating cloud-init ISO
+rc=0
+== 452 net0 -> newvnet, start 10:33:33
+update VM 452: -net0 virtio=BC:24:11:3D:A0:0C,bridge=newvnet
+generating cloud-init ISO
+rc=0
+== 453 net0 -> newvnet, start 10:33:41
+update VM 453: -net0 virtio=BC:24:11:47:2F:87,bridge=newvnet
+generating cloud-init ISO
+rc=0
+agent OK: 0/4 à 10:34:11
+agent OK: 0/4 à 10:34:31
+agent OK: 0/4 à 10:34:53
+agent OK: 0/4 à 10:35:13
+agent OK: 0/4 à 10:35:34

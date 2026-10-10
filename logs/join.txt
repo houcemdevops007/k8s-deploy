@@ -1,0 +1,119 @@
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 172.16.3.10:6443 --token 6r47q3.tiixv5la391lobdm \
+	--discovery-token-ca-cert-hash sha256:9223a7c6f8a2e764f392503f9221f49c0b7c23a85572e953e058dd29c9e23b1a 
+namespace/kube-flannel created
+serviceaccount/flannel created
+clusterrole.rbac.authorization.k8s.io/flannel created
+clusterrolebinding.rbac.authorization.k8s.io/flannel created
+configmap/kube-flannel-cfg created
+daemonset.apps/kube-flannel-ds created
+NAME                      STATUS   ROLES           AGE   VERSION    INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION   CONTAINER-RUNTIME
+kube-master-revision-m0   Ready    control-plane   19s   v1.33.13   172.16.3.10   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-53-amd64   containerd://2.4.1
+NAMESPACE      NAME                                              READY   STATUS              RESTARTS   AGE
+kube-flannel   kube-flannel-ds-8pprm                             0/1     PodInitializing     0          10s
+kube-system    coredns-674b8bbfcf-jf9wr                          0/1     ContainerCreating   0          10s
+kube-system    coredns-674b8bbfcf-mfnjt                          0/1     ContainerCreating   0          10s
+kube-system    etcd-kube-master-revision-m0                      1/1     Running             0          17s
+kube-system    kube-apiserver-kube-master-revision-m0            1/1     Running             1          17s
+kube-system    kube-controller-manager-kube-master-revision-m0   1/1     Running             1          17s
+kube-system    kube-proxy-r9927                                  1/1     Running             0          10s
+kube-system    kube-scheduler-kube-master-revision-m0            1/1     Running             1          17s
+MASTER_OK 2026-10-10T08:46:20+00:00
+join: kubeadm join 172.16.3.10:6443 --token ***
+== join 172.16.3.11 10:46:25
+[preflight] Running pre-flight checks
+[preflight] Reading configuration from the "kubeadm-config" ConfigMap in namespace "kube-system"...
+[preflight] Use 'kubeadm init phase upload-config --config your-config-file' to re-upload it.
+W1010 08:46:26.029504    2875 utils.go:69] The recommended value for "bindAddress" in "KubeProxyConfiguration" is: ::; the provided value is: 0.0.0.0
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Starting the kubelet
+[kubelet-check] Waiting for a healthy kubelet at http://127.0.0.1:10248/healthz. This can take up to 4m0s
+[kubelet-check] The kubelet is healthy after 501.42512ms
+[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap
+
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+
+Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
+
+rc=0
+== join 172.16.3.12 10:46:27
+[preflight] Running pre-flight checks
+[preflight] Reading configuration from the "kubeadm-config" ConfigMap in namespace "kube-system"...
+[preflight] Use 'kubeadm init phase upload-config --config your-config-file' to re-upload it.
+W1010 08:46:27.679837    2823 utils.go:69] The recommended value for "bindAddress" in "KubeProxyConfiguration" is: ::; the provided value is: 0.0.0.0
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Starting the kubelet
+[kubelet-check] Waiting for a healthy kubelet at http://127.0.0.1:10248/healthz. This can take up to 4m0s
+[kubelet-check] The kubelet is healthy after 501.309167ms
+[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap
+
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+
+Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
+
+rc=0
+== join 172.16.3.13 10:46:28
+[preflight] Running pre-flight checks
+[preflight] Reading configuration from the "kubeadm-config" ConfigMap in namespace "kube-system"...
+[preflight] Use 'kubeadm init phase upload-config --config your-config-file' to re-upload it.
+W1010 08:46:28.879808    2803 utils.go:69] The recommended value for "bindAddress" in "KubeProxyConfiguration" is: ::; the provided value is: 0.0.0.0
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Starting the kubelet
+[kubelet-check] Waiting for a healthy kubelet at http://127.0.0.1:10248/healthz. This can take up to 4m0s
+[kubelet-check] The kubelet is healthy after 501.817374ms
+[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap
+
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+
+Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
+
+rc=0
+Ready 1/4 10:46:30
+Ready 1/4 10:46:37
+Ready 4/4 10:46:43
+===== ETAT FINAL
+NAME                      STATUS   ROLES           AGE   VERSION    INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION   CONTAINER-RUNTIME
+kube-master-revision-m0   Ready    control-plane   42s   v1.33.13   172.16.3.10   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-53-amd64   containerd://2.4.1
+kube-worker-revision-m1   Ready    <none>          17s   v1.33.13   172.16.3.11   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-53-amd64   containerd://2.4.1
+kube-worker-revision-m2   Ready    <none>          15s   v1.33.13   172.16.3.12   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-53-amd64   containerd://2.4.1
+kube-worker-revision-m3   Ready    <none>          14s   v1.33.13   172.16.3.13   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-53-amd64   containerd://2.4.1
+NAMESPACE      NAME                                              READY   STATUS    RESTARTS   AGE   IP            NODE                      NOMINATED NODE   READINESS GATES
+kube-flannel   kube-flannel-ds-8pprm                             1/1     Running   0          33s   172.16.3.10   kube-master-revision-m0   <none>           <none>
+kube-flannel   kube-flannel-ds-bwdh2                             1/1     Running   0          15s   172.16.3.12   kube-worker-revision-m2   <none>           <none>
+kube-flannel   kube-flannel-ds-fn7cm                             1/1     Running   0          17s   172.16.3.11   kube-worker-revision-m1   <none>           <none>
+kube-flannel   kube-flannel-ds-gls6k                             1/1     Running   0          14s   172.16.3.13   kube-worker-revision-m3   <none>           <none>
+kube-system    coredns-674b8bbfcf-jf9wr                          0/1     Running   0          33s   10.244.0.3    kube-master-revision-m0   <none>           <none>
+kube-system    coredns-674b8bbfcf-mfnjt                          1/1     Running   0          33s   10.244.0.2    kube-master-revision-m0   <none>           <none>
+kube-system    etcd-kube-master-revision-m0                      1/1     Running   0          40s   172.16.3.10   kube-master-revision-m0   <none>           <none>
+kube-system    kube-apiserver-kube-master-revision-m0            1/1     Running   1          40s   172.16.3.10   kube-master-revision-m0   <none>           <none>
+kube-system    kube-controller-manager-kube-master-revision-m0   1/1     Running   1          40s   172.16.3.10   kube-master-revision-m0   <none>           <none>
+kube-system    kube-proxy-44p7r                                  1/1     Running   0          17s   172.16.3.11   kube-worker-revision-m1   <none>           <none>
+kube-system    kube-proxy-98qgx                                  1/1     Running   0          15s   172.16.3.12   kube-worker-revision-m2   <none>           <none>
+kube-system    kube-proxy-l2qw5                                  1/1     Running   0          14s   172.16.3.13   kube-worker-revision-m3   <none>           <none>
+kube-system    kube-proxy-r9927                                  1/1     Running   0          33s   172.16.3.10   kube-master-revision-m0   <none>           <none>
+kube-system    kube-scheduler-kube-master-revision-m0            1/1     Running   1          40s   172.16.3.10   kube-master-revision-m0   <none>           <none>
+Client Version: v1.33.13
+Kustomize Version: v5.6.0
+Server Version: v1.33.13
+NAME                 STATUS    MESSAGE   ERROR
+controller-manager   Healthy   ok        
+scheduler            Healthy   ok        
+etcd-0               Healthy   ok        
+Kubernetes control plane is running at https://172.16.3.10:6443
+CoreDNS is running at https://172.16.3.10:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+FINI

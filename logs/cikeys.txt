@@ -1,0 +1,70 @@
+clé Infra: /root/.ssh/id_rsa.pub
+== 450 : 3 clés
+update VM 450: -sshkeys ssh-rsa%20AAAAB3NzaC1yc2EAAAADAQABAAABgQCeZe4cFweZZsYXgSosTaPsZh%2F%2FKiLd%2BTsmoKzjyYPd%2B%2F4uzpMfZcyk6JlDAi%2B%2BZOlqVdVfH7BT%2BDsn9DMhIHuJErjU9AySjwnAGYN4VK4%2Fw12Ho6yoaWYvsx5pXrnzPl3nVRaPA50t4q89SPGRJMVpMZjDPJEQ5D%2BNQLw7HNbmsmJ8rtyc%2FObrwDFoTu93XO2Ie2M0jxyYqf%2B2TNYWDAgeUF6guovdR9ti61fFqVsH3GLazhhxQi6uIYQPDVIW7lqM8Is1oiUFqLP7DWOc0ziz%2F7HuZKE7a9obX4L3CNVeJ03TbSCAV%2BO8P%2B6AV%2FhUXg6Z2CWqkpfOtfvAPw2P7nu9%2Fpwojyw1kqOay0qPw2qKDvAlgSOcXwHMtMt%2FJwdCEWSDiq%2BM9%2BptaYpHOAXmpvTObdeub1LIE4%2FfvDV3eCkwAMZyxFz4tIkKIQjjeZp2vJTjqIHIjQtR3N5RmF%2BFUVGsFK00NUg1W%2B8mfnvUa3EDe%2BAqDN7MBd3Twew8GEmJtq0%3D%20root%40Houcem-Logwire%0Assh-rsa%20AAAAB3NzaC1yc2EAAAADAQABAAABgQC3rdNFncbJjAT2J%2FhD%2FLuTR%2F1M3WzFkDxhy76qJPfZ%2BSGK7H1HRIVF7V%2FwQbRtLhKnpswZS2ijDTJGe9Oa8oSnai6eROqSCuPcD8rq0jMX%2FQGpw8O38uikmU8924YOSbn9EYURwA%2FTbIeTGGIYw7tG8efM6OpVitVg1It%2Bhgvs%2BPPVZN5bj%2F5Q7buGn2ineBUC2Wcsr10M8c7TnFJSVh%2BsHTvteSX3mvf7GrgzGgSSsnhuu0YSxRUhW3oH2R6wJXe4iLpP8cSgkAEb5hJlrRwGjL7nenVwZN%2FDtqUOZbEwtrrYLTxSwRm27Un9Yy8OVVrZWpT7Qbcd421EhPxXewgs7SKUQCuiq9PfLFIhWtB8e16aimqVPTk6uZDPBD5AYkkRu81%2BhYIlhYl4QbgmNV3mUZ04w9xENs04t6hwAjfQZ4VB3acGfmd6DyaF1gxcz%2BoWLvC21iFnbOh4uhJ15QTCapCJFr2rIBdWjZs6yNKK%2By1HoLTUApG%2Bm2M2bJFfAFk%3D%20utente%40MacBook-Pro-de-utente.local%0Assh-rsa%20AAAAB3NzaC1yc2EAAAADAQABAAACAQDi6njPPQz8lbBrzOm%2BPIChl8V7mYQ5KbB83%2B8hFmgrgO8iXeBiWcAbbVVqxqgdUmJmpq4anKGG25LDk4%2B52JBsqege0GTIq4vN3mIpzw9WM15PHM%2BbnMBohmx4i47jOjdCQvwke3LdzVVnb4WD2JwpOfidBiQ%2FLHwXUnqpHiMXD7sOf%2FjzP8kufro0DGWJG1ASlo%2FlUey1ECqfXu%2Fty7ylSjdUIbecx4AJhTwgRBAwzHXGzZUl3hzg0kAXwsbdOwaamQDB%2FXXw%2FVE%2FhoomrPQyVBoAmdr5dJwZaknBc2R1dDhA2RQIXYVNOnwTdElMVePmauOAPXXNY36fmXb9xy79aIO%2FHuOrKlpk4bfVNa4bZINYARWt%2BigPBQ%2FZrYUsqhQyJTm8DQswYteu9j7m%2Bjly7ksfiEjC0dGKOJWr2uiPp8Iv2UqR2CmsgjOtS5WNCQr0B5k2Jy%2BxwzCSb8JCOcf99fCmHChGV8s6FcTDM7nkNyGewiMgBYIvwFqeEHS7V1wXFpF1HlXSabstmgUHHXf33zghdm6a9%2FCYX25oiPAmr8OkkjzrieGpS0XP9mEXIDNCsvchOfJsqBYu6b2QmEakGa8LhWvrPHzHyUoUn%2BOeYBRdiVxfOPjtl76YciKBgRoFwKOdFDoEKqDD5p71EKlklHU8VBniSaUqCjlwZaaRGw%3D%3D%20root%40Infra%0A
+QEMU Guest Agent is not running - VM 450 qga command 'guest-ping' failed - got timeout
+rc=0
+== 451 : 3 clés
+update VM 451: -sshkeys ssh-rsa%20AAAAB3NzaC1yc2EAAAADAQABAAABgQCeZe4cFweZZsYXgSosTaPsZh%2F%2FKiLd%2BTsmoKzjyYPd%2B%2F4uzpMfZcyk6JlDAi%2B%2BZOlqVdVfH7BT%2BDsn9DMhIHuJErjU9AySjwnAGYN4VK4%2Fw12Ho6yoaWYvsx5pXrnzPl3nVRaPA50t4q89SPGRJMVpMZjDPJEQ5D%2BNQLw7HNbmsmJ8rtyc%2FObrwDFoTu93XO2Ie2M0jxyYqf%2B2TNYWDAgeUF6guovdR9ti61fFqVsH3GLazhhxQi6uIYQPDVIW7lqM8Is1oiUFqLP7DWOc0ziz%2F7HuZKE7a9obX4L3CNVeJ03TbSCAV%2BO8P%2B6AV%2FhUXg6Z2CWqkpfOtfvAPw2P7nu9%2Fpwojyw1kqOay0qPw2qKDvAlgSOcXwHMtMt%2FJwdCEWSDiq%2BM9%2BptaYpHOAXmpvTObdeub1LIE4%2FfvDV3eCkwAMZyxFz4tIkKIQjjeZp2vJTjqIHIjQtR3N5RmF%2BFUVGsFK00NUg1W%2B8mfnvUa3EDe%2BAqDN7MBd3Twew8GEmJtq0%3D%20root%40Houcem-Logwire%0Assh-rsa%20AAAAB3NzaC1yc2EAAAADAQABAAABgQC3rdNFncbJjAT2J%2FhD%2FLuTR%2F1M3WzFkDxhy76qJPfZ%2BSGK7H1HRIVF7V%2FwQbRtLhKnpswZS2ijDTJGe9Oa8oSnai6eROqSCuPcD8rq0jMX%2FQGpw8O38uikmU8924YOSbn9EYURwA%2FTbIeTGGIYw7tG8efM6OpVitVg1It%2Bhgvs%2BPPVZN5bj%2F5Q7buGn2ineBUC2Wcsr10M8c7TnFJSVh%2BsHTvteSX3mvf7GrgzGgSSsnhuu0YSxRUhW3oH2R6wJXe4iLpP8cSgkAEb5hJlrRwGjL7nenVwZN%2FDtqUOZbEwtrrYLTxSwRm27Un9Yy8OVVrZWpT7Qbcd421EhPxXewgs7SKUQCuiq9PfLFIhWtB8e16aimqVPTk6uZDPBD5AYkkRu81%2BhYIlhYl4QbgmNV3mUZ04w9xENs04t6hwAjfQZ4VB3acGfmd6DyaF1gxcz%2BoWLvC21iFnbOh4uhJ15QTCapCJFr2rIBdWjZs6yNKK%2By1HoLTUApG%2Bm2M2bJFfAFk%3D%20utente%40MacBook-Pro-de-utente.local%0Assh-rsa%20AAAAB3NzaC1yc2EAAAADAQABAAACAQDi6njPPQz8lbBrzOm%2BPIChl8V7mYQ5KbB83%2B8hFmgrgO8iXeBiWcAbbVVqxqgdUmJmpq4anKGG25LDk4%2B52JBsqege0GTIq4vN3mIpzw9WM15PHM%2BbnMBohmx4i47jOjdCQvwke3LdzVVnb4WD2JwpOfidBiQ%2FLHwXUnqpHiMXD7sOf%2FjzP8kufro0DGWJG1ASlo%2FlUey1ECqfXu%2Fty7ylSjdUIbecx4AJhTwgRBAwzHXGzZUl3hzg0kAXwsbdOwaamQDB%2FXXw%2FVE%2FhoomrPQyVBoAmdr5dJwZaknBc2R1dDhA2RQIXYVNOnwTdElMVePmauOAPXXNY36fmXb9xy79aIO%2FHuOrKlpk4bfVNa4bZINYARWt%2BigPBQ%2FZrYUsqhQyJTm8DQswYteu9j7m%2Bjly7ksfiEjC0dGKOJWr2uiPp8Iv2UqR2CmsgjOtS5WNCQr0B5k2Jy%2BxwzCSb8JCOcf99fCmHChGV8s6FcTDM7nkNyGewiMgBYIvwFqeEHS7V1wXFpF1HlXSabstmgUHHXf33zghdm6a9%2FCYX25oiPAmr8OkkjzrieGpS0XP9mEXIDNCsvchOfJsqBYu6b2QmEakGa8LhWvrPHzHyUoUn%2BOeYBRdiVxfOPjtl76YciKBgRoFwKOdFDoEKqDD5p71EKlklHU8VBniSaUqCjlwZaaRGw%3D%3D%20root%40Infra%0A
+QEMU Guest Agent is not running - VM 451 qga command 'guest-ping' failed - got timeout
+rc=0
+== 452 : 3 clés
+update VM 452: -sshkeys ssh-rsa%20AAAAB3NzaC1yc2EAAAADAQABAAABgQCeZe4cFweZZsYXgSosTaPsZh%2F%2FKiLd%2BTsmoKzjyYPd%2B%2F4uzpMfZcyk6JlDAi%2B%2BZOlqVdVfH7BT%2BDsn9DMhIHuJErjU9AySjwnAGYN4VK4%2Fw12Ho6yoaWYvsx5pXrnzPl3nVRaPA50t4q89SPGRJMVpMZjDPJEQ5D%2BNQLw7HNbmsmJ8rtyc%2FObrwDFoTu93XO2Ie2M0jxyYqf%2B2TNYWDAgeUF6guovdR9ti61fFqVsH3GLazhhxQi6uIYQPDVIW7lqM8Is1oiUFqLP7DWOc0ziz%2F7HuZKE7a9obX4L3CNVeJ03TbSCAV%2BO8P%2B6AV%2FhUXg6Z2CWqkpfOtfvAPw2P7nu9%2Fpwojyw1kqOay0qPw2qKDvAlgSOcXwHMtMt%2FJwdCEWSDiq%2BM9%2BptaYpHOAXmpvTObdeub1LIE4%2FfvDV3eCkwAMZyxFz4tIkKIQjjeZp2vJTjqIHIjQtR3N5RmF%2BFUVGsFK00NUg1W%2B8mfnvUa3EDe%2BAqDN7MBd3Twew8GEmJtq0%3D%20root%40Houcem-Logwire%0Assh-rsa%20AAAAB3NzaC1yc2EAAAADAQABAAABgQC3rdNFncbJjAT2J%2FhD%2FLuTR%2F1M3WzFkDxhy76qJPfZ%2BSGK7H1HRIVF7V%2FwQbRtLhKnpswZS2ijDTJGe9Oa8oSnai6eROqSCuPcD8rq0jMX%2FQGpw8O38uikmU8924YOSbn9EYURwA%2FTbIeTGGIYw7tG8efM6OpVitVg1It%2Bhgvs%2BPPVZN5bj%2F5Q7buGn2ineBUC2Wcsr10M8c7TnFJSVh%2BsHTvteSX3mvf7GrgzGgSSsnhuu0YSxRUhW3oH2R6wJXe4iLpP8cSgkAEb5hJlrRwGjL7nenVwZN%2FDtqUOZbEwtrrYLTxSwRm27Un9Yy8OVVrZWpT7Qbcd421EhPxXewgs7SKUQCuiq9PfLFIhWtB8e16aimqVPTk6uZDPBD5AYkkRu81%2BhYIlhYl4QbgmNV3mUZ04w9xENs04t6hwAjfQZ4VB3acGfmd6DyaF1gxcz%2BoWLvC21iFnbOh4uhJ15QTCapCJFr2rIBdWjZs6yNKK%2By1HoLTUApG%2Bm2M2bJFfAFk%3D%20utente%40MacBook-Pro-de-utente.local%0Assh-rsa%20AAAAB3NzaC1yc2EAAAADAQABAAACAQDi6njPPQz8lbBrzOm%2BPIChl8V7mYQ5KbB83%2B8hFmgrgO8iXeBiWcAbbVVqxqgdUmJmpq4anKGG25LDk4%2B52JBsqege0GTIq4vN3mIpzw9WM15PHM%2BbnMBohmx4i47jOjdCQvwke3LdzVVnb4WD2JwpOfidBiQ%2FLHwXUnqpHiMXD7sOf%2FjzP8kufro0DGWJG1ASlo%2FlUey1ECqfXu%2Fty7ylSjdUIbecx4AJhTwgRBAwzHXGzZUl3hzg0kAXwsbdOwaamQDB%2FXXw%2FVE%2FhoomrPQyVBoAmdr5dJwZaknBc2R1dDhA2RQIXYVNOnwTdElMVePmauOAPXXNY36fmXb9xy79aIO%2FHuOrKlpk4bfVNa4bZINYARWt%2BigPBQ%2FZrYUsqhQyJTm8DQswYteu9j7m%2Bjly7ksfiEjC0dGKOJWr2uiPp8Iv2UqR2CmsgjOtS5WNCQr0B5k2Jy%2BxwzCSb8JCOcf99fCmHChGV8s6FcTDM7nkNyGewiMgBYIvwFqeEHS7V1wXFpF1HlXSabstmgUHHXf33zghdm6a9%2FCYX25oiPAmr8OkkjzrieGpS0XP9mEXIDNCsvchOfJsqBYu6b2QmEakGa8LhWvrPHzHyUoUn%2BOeYBRdiVxfOPjtl76YciKBgRoFwKOdFDoEKqDD5p71EKlklHU8VBniSaUqCjlwZaaRGw%3D%3D%20root%40Infra%0A
+QEMU Guest Agent is not running - VM 452 qga command 'guest-ping' failed - got timeout
+rc=0
+== 453 : 3 clés
+update VM 453: -sshkeys ssh-rsa%20AAAAB3NzaC1yc2EAAAADAQABAAABgQCeZe4cFweZZsYXgSosTaPsZh%2F%2FKiLd%2BTsmoKzjyYPd%2B%2F4uzpMfZcyk6JlDAi%2B%2BZOlqVdVfH7BT%2BDsn9DMhIHuJErjU9AySjwnAGYN4VK4%2Fw12Ho6yoaWYvsx5pXrnzPl3nVRaPA50t4q89SPGRJMVpMZjDPJEQ5D%2BNQLw7HNbmsmJ8rtyc%2FObrwDFoTu93XO2Ie2M0jxyYqf%2B2TNYWDAgeUF6guovdR9ti61fFqVsH3GLazhhxQi6uIYQPDVIW7lqM8Is1oiUFqLP7DWOc0ziz%2F7HuZKE7a9obX4L3CNVeJ03TbSCAV%2BO8P%2B6AV%2FhUXg6Z2CWqkpfOtfvAPw2P7nu9%2Fpwojyw1kqOay0qPw2qKDvAlgSOcXwHMtMt%2FJwdCEWSDiq%2BM9%2BptaYpHOAXmpvTObdeub1LIE4%2FfvDV3eCkwAMZyxFz4tIkKIQjjeZp2vJTjqIHIjQtR3N5RmF%2BFUVGsFK00NUg1W%2B8mfnvUa3EDe%2BAqDN7MBd3Twew8GEmJtq0%3D%20root%40Houcem-Logwire%0Assh-rsa%20AAAAB3NzaC1yc2EAAAADAQABAAABgQC3rdNFncbJjAT2J%2FhD%2FLuTR%2F1M3WzFkDxhy76qJPfZ%2BSGK7H1HRIVF7V%2FwQbRtLhKnpswZS2ijDTJGe9Oa8oSnai6eROqSCuPcD8rq0jMX%2FQGpw8O38uikmU8924YOSbn9EYURwA%2FTbIeTGGIYw7tG8efM6OpVitVg1It%2Bhgvs%2BPPVZN5bj%2F5Q7buGn2ineBUC2Wcsr10M8c7TnFJSVh%2BsHTvteSX3mvf7GrgzGgSSsnhuu0YSxRUhW3oH2R6wJXe4iLpP8cSgkAEb5hJlrRwGjL7nenVwZN%2FDtqUOZbEwtrrYLTxSwRm27Un9Yy8OVVrZWpT7Qbcd421EhPxXewgs7SKUQCuiq9PfLFIhWtB8e16aimqVPTk6uZDPBD5AYkkRu81%2BhYIlhYl4QbgmNV3mUZ04w9xENs04t6hwAjfQZ4VB3acGfmd6DyaF1gxcz%2BoWLvC21iFnbOh4uhJ15QTCapCJFr2rIBdWjZs6yNKK%2By1HoLTUApG%2Bm2M2bJFfAFk%3D%20utente%40MacBook-Pro-de-utente.local%0Assh-rsa%20AAAAB3NzaC1yc2EAAAADAQABAAACAQDi6njPPQz8lbBrzOm%2BPIChl8V7mYQ5KbB83%2B8hFmgrgO8iXeBiWcAbbVVqxqgdUmJmpq4anKGG25LDk4%2B52JBsqege0GTIq4vN3mIpzw9WM15PHM%2BbnMBohmx4i47jOjdCQvwke3LdzVVnb4WD2JwpOfidBiQ%2FLHwXUnqpHiMXD7sOf%2FjzP8kufro0DGWJG1ASlo%2FlUey1ECqfXu%2Fty7ylSjdUIbecx4AJhTwgRBAwzHXGzZUl3hzg0kAXwsbdOwaamQDB%2FXXw%2FVE%2FhoomrPQyVBoAmdr5dJwZaknBc2R1dDhA2RQIXYVNOnwTdElMVePmauOAPXXNY36fmXb9xy79aIO%2FHuOrKlpk4bfVNa4bZINYARWt%2BigPBQ%2FZrYUsqhQyJTm8DQswYteu9j7m%2Bjly7ksfiEjC0dGKOJWr2uiPp8Iv2UqR2CmsgjOtS5WNCQr0B5k2Jy%2BxwzCSb8JCOcf99fCmHChGV8s6FcTDM7nkNyGewiMgBYIvwFqeEHS7V1wXFpF1HlXSabstmgUHHXf33zghdm6a9%2FCYX25oiPAmr8OkkjzrieGpS0XP9mEXIDNCsvchOfJsqBYu6b2QmEakGa8LhWvrPHzHyUoUn%2BOeYBRdiVxfOPjtl76YciKBgRoFwKOdFDoEKqDD5p71EKlklHU8VBniSaUqCjlwZaaRGw%3D%3D%20root%40Infra%0A
+QEMU Guest Agent is not running - VM 453 qga command 'guest-ping' failed - got timeout
+rc=0
+ssh OK 1/4 10:37:19
+ssh OK 2/4 10:37:25
+ssh OK 3/4 10:37:31
+ssh OK 4/4 10:37:37
+== test 172.16.3.10
+Warning: Permanently added '172.16.3.10' (ED25519) to the list of known hosts.
+kube-master-Revision-M0
+Debian GNU/Linux 12 (bookworm)
+6.1.0-53-amd64
+4
+Mem:            8722         360        8295           0         298        8362
+/dev/sda1        30G  1.8G   27G   7% /
+swap:
+bash: line 1: swapon: command not found
+SUDO_OK
+pkgs.k8s.io:302
+== test 172.16.3.11
+Warning: Permanently added '172.16.3.11' (ED25519) to the list of known hosts.
+kube-worker-Revision-M1
+Debian GNU/Linux 12 (bookworm)
+6.1.0-53-amd64
+4
+Mem:            9706         355        9284           0         301        9350
+/dev/sda1        30G  1.8G   27G   7% /
+swap:
+bash: line 1: swapon: command not found
+SUDO_OK
+pkgs.k8s.io:302
+== test 172.16.3.12
+Warning: Permanently added '172.16.3.12' (ED25519) to the list of known hosts.
+kube-worker-Revision-M2
+Debian GNU/Linux 12 (bookworm)
+6.1.0-53-amd64
+4
+Mem:            9848         367        9415           0         301        9481
+/dev/sda1        30G  1.8G   27G   7% /
+swap:
+bash: line 1: swapon: command not found
+SUDO_OK
+pkgs.k8s.io:302
+== test 172.16.3.13
+Warning: Permanently added '172.16.3.13' (ED25519) to the list of known hosts.
+kube-worker-Revision-M3
+Debian GNU/Linux 12 (bookworm)
+6.1.0-53-amd64
+4
+Mem:            9848         395        9387           0         300        9452
+/dev/sda1        30G  1.8G   27G   7% /
+swap:
+bash: line 1: swapon: command not found
+SUDO_OK
+pkgs.k8s.io:302
+FINI

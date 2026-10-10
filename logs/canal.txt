@@ -1,0 +1,95 @@
+===== 1. Téléchargement des manifestes 11:30:24
+Calico/Canal v3.33.0
+===== 2. Retrait de Flannel 11:30:25
+clusterrole.rbac.authorization.k8s.io "flannel" deleted
+ls: cannot open directory '/etc/cni/net.d/': Permission denied
+ls: cannot open directory '/etc/cni/net.d/': Permission denied
+ls: cannot open directory '/etc/cni/net.d/': Permission denied
+ls: cannot open directory '/etc/cni/net.d/': Permission denied
+===== 3. Déploiement de Canal 11:30:27
+poddisruptionbudget.policy/calico-kube-controllers configured
+serviceaccount/calico-kube-controllers unchanged
+serviceaccount/canal unchanged
+serviceaccount/calico-cni-plugin unchanged
+configmap/canal-config unchanged
+customresourcedefinition.apiextensions.k8s.io/bgpconfigurations.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/bgpfilters.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/bgppeers.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/blockaffinities.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/caliconodestatuses.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/clusterinformations.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/felixconfigurations.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/globalnetworkpolicies.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/globalnetworksets.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/hostendpoints.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/ipamblocks.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/ipamconfigs.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/ipamhandles.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/ippools.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/ipreservations.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/kubecontrollersconfigurations.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/networkpolicies.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/networksets.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/stagedglobalnetworkpolicies.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/stagedkubernetesnetworkpolicies.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/stagednetworkpolicies.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/tiers.crd.projectcalico.org unchanged
+customresourcedefinition.apiextensions.k8s.io/clusternetworkpolicies.policy.networking.k8s.io configured
+clusterrole.rbac.authorization.k8s.io/calico-kube-controllers unchanged
+clusterrole.rbac.authorization.k8s.io/calico-node unchanged
+clusterrole.rbac.authorization.k8s.io/calico-cni-plugin unchanged
+clusterrole.rbac.authorization.k8s.io/flannel created
+clusterrole.rbac.authorization.k8s.io/calico-tier-getter unchanged
+clusterrolebinding.rbac.authorization.k8s.io/calico-kube-controllers unchanged
+clusterrolebinding.rbac.authorization.k8s.io/canal-flannel unchanged
+clusterrolebinding.rbac.authorization.k8s.io/canal-calico unchanged
+clusterrolebinding.rbac.authorization.k8s.io/calico-cni-plugin unchanged
+clusterrolebinding.rbac.authorization.k8s.io/calico-tier-getter unchanged
+daemonset.apps/canal configured
+deployment.apps/calico-kube-controllers unchanged
+Waiting for daemon set "canal" rollout to finish: 2 of 4 updated pods are available...
+Waiting for daemon set "canal" rollout to finish: 3 of 4 updated pods are available...
+daemon set "canal" successfully rolled out
+deployment "calico-kube-controllers" successfully rolled out
+===== 4. Redémarrage des workloads (rattachement au CNI Canal) 11:30:55
+deployment.apps/argocd-applicationset-controller restarted
+deployment.apps/argocd-dex-server restarted
+deployment.apps/argocd-notifications-controller restarted
+deployment.apps/argocd-redis restarted
+deployment.apps/argocd-repo-server restarted
+deployment.apps/argocd-server restarted
+deployment.apps/coredns restarted
+deployment.apps/metrics-server restarted
+deployment.apps/local-path-provisioner restarted
+daemonset.apps/traefik restarted
+statefulset.apps/argocd-application-controller restarted
+pod/argocd-application-controller-0 condition met
+pod/argocd-applicationset-controller-58f854df45-62929 condition met
+pod/argocd-dex-server-78dd94f7c9-mcwlw condition met
+pod/argocd-notifications-controller-564d844dc8-tq48h condition met
+pod/argocd-redis-5bd4966c7d-lld7k condition met
+pod/argocd-repo-server-6457597d48-x4vxp condition met
+pod/argocd-server-7d45f57b9d-8scth condition met
+pod/mypod condition met
+pod/calico-kube-controllers-68d4966964-fr797 condition met
+pod/canal-c2m4d condition met
+pod/canal-czk5w condition met
+pod/canal-sc2ss condition met
+pod/canal-xkjrq condition met
+pod/coredns-77c5b76546-brsg6 condition met
+pod/coredns-77c5b76546-npbcw condition met
+pod/etcd-kube-master-revision-m0 condition met
+pod/kube-apiserver-kube-master-revision-m0 condition met
+pod/kube-controller-manager-kube-master-revision-m0 condition met
+pod/kube-proxy-44p7r condition met
+pod/kube-proxy-98qgx condition met
+pod/kube-proxy-l2qw5 condition met
+pod/kube-proxy-r9927 condition met
+pod/kube-scheduler-kube-master-revision-m0 condition met
+pod/metrics-server-79c4f5bfd8-8qhp4 condition met
+pod/local-path-provisioner-75878f6b85-c4dhl condition met
+pod/traefik-6vbvv condition met
+Error from server (NotFound): pods "metrics-server-65f9479866-rnnzq" not found
+timed out waiting for the condition on pods/traefik-dmr7x
+timed out waiting for the condition on pods/traefik-q624j
+timed out waiting for the condition on pods/traefik-x9w4k

@@ -1,0 +1,62 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: efi-tenant-protection
+  labels: {tenant: platform}
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups: ["*"]
+      apiVersions: ["*"]
+      operations: ["CREATE", "UPDATE", "DELETE", "CONNECT"]
+      resources: ["*/*"]
+      scope: "*"
+  # S'applique aux utilisateurs efiadminN (groupe efi-tenants) et aux ServiceAccounts hors namespaces plateforme
+  matchConditions:
+  - name: tenants-uniquement
+    expression: >-
+      'efi-tenants' in request.userInfo.groups ||
+      (request.userInfo.username.startsWith('system:serviceaccount:') &&
+       !(request.userInfo.username.split(':')[2] in ['kube-system','kube-public','kube-node-lease','traefik','argocd','local-path-storage']))
+  variables:
+  - name: sa
+    expression: "request.userInfo.username.startsWith('system:serviceaccount:')"
+  - name: saNs
+    expression: "variables.sa ? request.userInfo.username.split(':')[2] : ''"
+  - name: owner
+    expression: "variables.sa ? (variables.saNs.matches('^efiadmin[0-9]+-ns$') ? variables.saNs.replace('-ns', '') : 'ns-' + variables.saNs) : request.userInfo.username"
+  - name: nsTenant
+    expression: "namespaceObject != null && has(namespaceObject.metadata.labels) && 'tenant' in namespaceObject.metadata.labels ? namespaceObject.metadata.labels['tenant'] : ''"
+  - name: oldTenant
+    expression: "oldObject != null && has(oldObject.metadata) && has(oldObject.metadata.labels) && 'tenant' in oldObject.metadata.labels ? oldObject.metadata.labels['tenant'] : ''"
+  - name: newTenant
+    expression: "object != null && has(object.metadata) && has(object.metadata.labels) && 'tenant' in object.metadata.labels ? object.metadata.labels['tenant'] : ''"
+  validations:
+  - expression: "variables.nsTenant == '' || variables.nsTenant == variables.owner"
+    messageExpression: "'efi-protection : le namespace ' + namespaceObject.metadata.name + ' appartient a ' + variables.nsTenant + ' (lecture seule pour vous)'"
+  - expression: "variables.oldTenant == '' || variables.oldTenant == variables.owner"
+    messageExpression: "'efi-protection : cet objet appartient a ' + variables.oldTenant + ' (lecture seule pour vous)'"
+  - expression: "variables.newTenant == '' || variables.newTenant == variables.owner"
+    messageExpression: "'efi-protection : le label tenant doit etre votre identifiant (' + variables.owner + ')'"
+  - expression: "!(request.resource.resource in ['validatingadmissionpolicies','validatingadmissionpolicybindings','validatingwebhookconfigurations','mutatingwebhookconfigurations'])"
+    message: "efi-protection : objets d'admission reserves a l'administrateur"
+  - expression: "request.resource.resource != 'nodes' || (request.operation == 'UPDATE' && !has(request.subResource) && object.spec == oldObject.spec)"
+    message: "efi-protection : sur les noeuds, seuls labels/annotations sont modifiables (pas de suppression, taint, cordon/drain, nodes/proxy)"
+  - expression: "!(request.resource.resource == 'persistentvolumes' && object != null && has(object.spec) && (has(object.spec.hostPath) || has(object.spec.local)))"
+    message: "efi-protection : PersistentVolume hostPath/local interdit (utilisez une PVC sur la StorageClass local-path)"
+  - expression: "!(request.resource.resource == 'namespaces' && request.name.matches('^efiadmin[0-9]+-ns$') && (request.operation == 'DELETE' || variables.newTenant != variables.oldTenant))"
+    message: "efi-protection : les namespaces personnels efiadminN-ns ne peuvent etre ni supprimes ni deproteges"
+  - expression: "!(request.resource.resource == 'persistentvolumes' && oldObject != null && has(oldObject.spec.claimRef) && oldObject.spec.claimRef.namespace.matches('^efiadmin[0-9]+-ns$') && oldObject.spec.claimRef.namespace != variables.owner + '-ns')"
+    message: "efi-protection : ce volume appartient a un autre utilisateur"
+  - expression: "!(request.resource.resource == 'namespaces' && object != null && has(object.metadata.labels) && 'pod-security.kubernetes.io/enforce' in object.metadata.labels && object.metadata.labels['pod-security.kubernetes.io/enforce'] == 'privileged')"
+    message: "efi-protection : niveau Pod Security 'privileged' interdit"
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: efi-tenant-protection
+  labels: {tenant: platform}
+spec:
+  policyName: efi-tenant-protection
+  validationActions: [Deny]

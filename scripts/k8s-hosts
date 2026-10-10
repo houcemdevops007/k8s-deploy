@@ -1,0 +1,4 @@
+172.16.3.10 kube-master-Revision-M0 # k8s-cluster
+172.16.3.11 kube-worker-Revision-M1 # k8s-cluster
+172.16.3.12 kube-worker-Revision-M2 # k8s-cluster
+172.16.3.13 kube-worker-Revision-M3 # k8s-cluster

@@ -1,0 +1,33 @@
+== VM 451 11:29:01
+update VM 451: -cpu x86-64-v3
+rc=1
+== VM 452 11:29:09
+update VM 452: -cpu x86-64-v3
+rc=1
+== VM 453 11:29:15
+update VM 453: -cpu x86-64-v3
+rc=1
+== VM 450 11:29:24
+update VM 450: -cpu x86-64-v3
+rc=1
+ssh 2/4 11:29:41
+ssh 3/4 11:29:50
+ssh 3/4 11:29:56
+ssh 4/4 11:30:03
+172.16.3.10 : avx2
+  x86-64-v3 (supported, searched)
+172.16.3.11 : avx2
+  x86-64-v3 (supported, searched)
+172.16.3.12 : avx2
+  x86-64-v3 (supported, searched)
+172.16.3.13 : avx2
+  x86-64-v3 (supported, searched)
+The connection to the server 172.16.3.10:6443 was refused - did you specify the right host or port?
+nodes Ready (avant CNI) : 0/4
+The connection to the server 172.16.3.10:6443 was refused - did you specify the right host or port?
+nodes Ready (avant CNI) : 0/4
+nodes Ready (avant CNI) : 0/4
+nodes Ready (avant CNI) : 1/4
+Relance migration Canal 11:30:24
+Terminated
+FINI

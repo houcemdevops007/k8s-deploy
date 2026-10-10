@@ -1,0 +1,26 @@
+node/kube-worker-revision-m1 labeled
+node/kube-worker-revision-m2 labeled
+node/kube-worker-revision-m3 labeled
+deployment "coredns" successfully rolled out
+namespace/smoke-test created
+deployment.apps/web created
+service/web exposed
+Waiting for deployment "web" rollout to finish: 0 of 3 updated replicas are available...
+Waiting for deployment "web" rollout to finish: 1 of 3 updated replicas are available...
+Waiting for deployment "web" rollout to finish: 2 of 3 updated replicas are available...
+deployment "web" successfully rolled out
+NAME                   READY   STATUS    RESTARTS   AGE   IP           NODE                      NOMINATED NODE   READINESS GATES
+web-76787cc8c6-5jrss   1/1     Running   0          8s    10.244.3.2   kube-worker-revision-m3   <none>           <none>
+web-76787cc8c6-jxxfq   1/1     Running   0          8s    10.244.1.2   kube-worker-revision-m1   <none>           <none>
+web-76787cc8c6-slpk5   1/1     Running   0          8s    10.244.2.2   kube-worker-revision-m2   <none>           <none>
+If you don't see a command prompt, try pressing enter.
+pod "t" deleted
+SMOKE_RC=0
+namespace "smoke-test" deleted
+NAME                      STATUS   ROLES           AGE     VERSION
+kube-master-revision-m0   Ready    control-plane   2m25s   v1.33.13
+kube-worker-revision-m1   Ready    worker          2m      v1.33.13
+kube-worker-revision-m2   Ready    worker          118s    v1.33.13
+kube-worker-revision-m3   Ready    worker          117s    v1.33.13
+NAMESPACE      NAME                                              READY   STATUS    RESTARTS   AGE
+FINI

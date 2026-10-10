@@ -1,0 +1,31 @@
+===== 5. Tests d'isolation réseau (NetworkPolicy) 11:33:39
+Warning: would violate PodSecurity "restricted:latest": allowPrivilegeEscalation != false (container "nginx" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container "nginx" must set securityContext.capabilities.drop=["ALL"]), runAsNonRoot != true (pod or container "nginx" must set securityContext.runAsNonRoot=true), seccompProfile (pod or container "nginx" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
+deployment.apps/np-web created
+service/np-web exposed
+ingress.networking.k8s.io/np-web created
+Warning: would violate PodSecurity "restricted:latest": allowPrivilegeEscalation != false (container "np-client" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container "np-client" must set securityContext.capabilities.drop=["ALL"]), runAsNonRoot != true (pod or container "np-client" must set securityContext.runAsNonRoot=true), seccompProfile (pod or container "np-client" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
+pod/np-client created
+Warning: would violate PodSecurity "restricted:latest": allowPrivilegeEscalation != false (container "np-client" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container "np-client" must set securityContext.capabilities.drop=["ALL"]), runAsNonRoot != true (pod or container "np-client" must set securityContext.runAsNonRoot=true), seccompProfile (pod or container "np-client" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
+pod/np-client created
+deployment "np-web" successfully rolled out
+pod/np-client condition met
+pod/np-client condition met
+Même namespace (efiadmin1 -> efiadmin1, attendu OK) : OK
+Autre namespace (efiadmin2 -> efiadmin1, attendu BLOQUE) : BLOQUE
+DNS depuis un tenant (attendu OK) : OK
+Via Ingress Traefik (attendu OK) : 200
+deployment.apps "np-web" deleted
+service "np-web" deleted
+ingress.networking.k8s.io "np-web" deleted
+pod "np-client" deleted
+pod "np-client" deleted
+===== 6. État final 11:33:55
+NAME                      STATUS   ROLES           AGE   VERSION    INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION   CONTAINER-RUNTIME
+kube-master-revision-m0   Ready    control-plane   47m   v1.33.13   172.16.3.10   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-53-amd64   containerd://2.4.1
+kube-worker-revision-m1   Ready    worker          47m   v1.33.13   172.16.3.11   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-53-amd64   containerd://2.4.1
+kube-worker-revision-m2   Ready    worker          47m   v1.33.13   172.16.3.12   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-53-amd64   containerd://2.4.1
+kube-worker-revision-m3   Ready    worker          47m   v1.33.13   172.16.3.13   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-53-amd64   containerd://2.4.1
+NAMESPACE            NAME                                                READY   STATUS        RESTARTS        AGE
+efiadmin1-ns         np-client                                           1/1     Terminating   0               15s
+efiadmin2-ns         np-client                                           1/1     Terminating   0               14s
+CANAL_OK 2026-10-10T11:33:55+02:00
