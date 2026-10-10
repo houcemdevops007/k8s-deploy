@@ -6,24 +6,29 @@ import com.michelin.cio.hudson.plugins.rolestrategy.PermissionEntry
 import com.synopsys.arc.jenkins.plugins.rolestrategy.RoleType
 import com.cloudbees.hudson.plugins.folder.*
 import hudson.model.Item
+import hudson.model.AbstractItem
+import hudson.model.Job
 import java.lang.reflect.Field
+import org.springframework.security.core.Authentication
 
-def instance = Jenkins.get()
-
-println("=== CONFIGURING JENKINS MULTI-TENANCY WITH PLUGINS MENU & STRICT ISOLATION ===")
+println("=== CONFIGURING JENKINS MULTI-TENANCY WITH CUSTOM ROLE STRATEGY ===")
 
 // 1. Enable SystemRead permission in Jenkins core
 def sysRead = Permission.fromId("hudson.model.Hudson.SystemRead")
 if (sysRead != null) {
-    Field fEnabled = Permission.class.getDeclaredField("enabled")
-    fEnabled.setAccessible(true)
-    fEnabled.setBoolean(sysRead, true)
-    println("Enabled SystemRead permission in Jenkins core!")
+    try {
+        Field fEnabled = Permission.class.getDeclaredField("enabled")
+        fEnabled.setAccessible(true)
+        fEnabled.setBoolean(sysRead, true)
+        println("Enabled SystemRead permission in Jenkins core!")
+    } catch (Throwable t) {
+        println("Note on SystemRead: " + t.message)
+    }
 }
 
 // 2. Clear DANGEROUS_PERMISSIONS in Role Strategy plugin using Unsafe
 try {
-    def rsCL = instance.pluginManager.getPlugin("role-strategy").classLoader
+    def rsCL = Jenkins.get().pluginManager.getPlugin("role-strategy").classLoader
     Class phClass = rsCL.loadClass("org.jenkinsci.plugins.rolestrategy.permissions.PermissionHelper")
     
     Field unsafeField = sun.misc.Unsafe.getDeclaredField("theUnsafe")
@@ -38,6 +43,8 @@ try {
 } catch (Throwable t) {
     println("Error clearing DANGEROUS_PERMISSIONS: " + t)
 }
+
+def instance = Jenkins.get()
 
 // 3. Security Realm
 def hudsonRealm = new HudsonPrivateSecurityRealm(false, false, null)
@@ -67,16 +74,55 @@ def getPerm = { id ->
     return p
 }
 
-RoleBasedAuthorizationStrategy rba = new RoleBasedAuthorizationStrategy()
+// Custom strategy extending RoleBasedAuthorizationStrategy to allow plugin installation & tools management globally while isolating candidate folders
+class CustomRoleBasedStrategy extends RoleBasedAuthorizationStrategy {
+    @Override
+    ACL getRootACL() {
+        def parentRoot = super.getRootACL()
+        return new ACL() {
+            @Override
+            boolean hasPermission2(Authentication a, Permission permission) {
+                if (a.name != null && a.name.startsWith("efiadmin")) {
+                    return true
+                }
+                return parentRoot.hasPermission2(a, permission)
+            }
+        }
+    }
 
-// 4. Admin Global Role (FULL ADMINISTER)
+    @Override
+    ACL getACL(AbstractItem item) {
+        def parentItemACL = super.getACL(item)
+        return new ACL() {
+            @Override
+            boolean hasPermission2(Authentication a, Permission permission) {
+                if (a.name != null && a.name.startsWith("efiadmin")) {
+                    String fullName = item.fullName
+                    if (!fullName.equals(a.name) && !fullName.startsWith(a.name + "/")) {
+                        return false
+                    }
+                }
+                return parentItemACL.hasPermission2(a, permission)
+            }
+        }
+    }
+
+    @Override
+    ACL getACL(Job<?,?> job) {
+        return getACL((AbstractItem) job)
+    }
+}
+
+CustomRoleBasedStrategy rba = new CustomRoleBasedStrategy()
+
+// 4. Admin Global Role
 Set<Permission> adminPerms = new HashSet<>()
 adminPerms.add(getPerm("hudson.model.Hudson.Administer"))
 Role adminRole = new Role("admin", adminPerms)
 rba.addRole(RoleType.Global, adminRole)
 rba.assignRole(RoleType.Global, adminRole, PermissionEntry.user("admin"))
 
-// 5. Candidate Global Role (SystemRead, UploadPlugins, ConfigureUpdateCenter, Read, Manage, Computer.*, CredentialsProvider.*, View.*)
+// 5. Candidate Global Role
 Set<Permission> candidateGlobalPerms = new HashSet<>()
 [
     "hudson.model.Hudson.Read",
@@ -113,7 +159,7 @@ rba.addRole(RoleType.Global, candidateGlobalRole)
     rba.assignRole(RoleType.Global, candidateGlobalRole, PermissionEntry.user(uname))
 }
 
-// 6. Item Roles per candidate (STRICT REGEX ^efiadminN($|[/-].*))
+// 6. Item Roles per candidate
 Set<Permission> itemPerms = new HashSet<>()
 [
     "hudson.model.Item.Build",
