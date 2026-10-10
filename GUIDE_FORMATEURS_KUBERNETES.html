@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Formateur — Cluster Kubernetes & Argo CD Multi-Tenants</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --accent-blue: #38bdf8;
+            --accent-indigo: #6366f1;
+            --accent-purple: #a855f7;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #334155;
+            --code-bg: #090d16;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --shadow-glow: 0 10px 30px -10px rgba(56, 189, 248, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(168, 85, 247, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-indigo), var(--accent-purple));
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .badge-emerald {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-emerald);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-purple {
+            background: rgba(168, 85, 247, 0.1);
+            color: var(--accent-purple);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #ffffff 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        nav.toc {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        nav.toc h3 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        nav.toc ul {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 10px;
+            list-style: none;
+        }
+
+        nav.toc a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid transparent;
+        }
+
+        nav.toc a:hover {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .section-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.3s ease;
+        }
+
+        .section-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .section-title .icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .info-box.accent-blue { border-left: 4px solid var(--accent-blue); }
+        .info-box.accent-emerald { border-left: 4px solid var(--accent-emerald); }
+        .info-box.accent-purple { border-left: 4px solid var(--accent-purple); }
+        .info-box.accent-amber { border-left: 4px solid var(--accent-amber); }
+
+        .info-box h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1.5rem 0;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            background: rgba(30, 41, 59, 0.4);
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(51, 65, 85, 0.5);
+        }
+
+        .code-block {
+            position: relative;
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin: 1.25rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            background: rgba(30, 41, 59, 0.8);
+            border-bottom: 1px solid var(--border-color);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .copy-btn {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-blue);
+            color: #000;
+        }
+
+        pre {
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.88em;
+        }
+
+        .cmd-prompt { color: var(--accent-emerald); user-select: none; }
+        .cmd-comment { color: var(--text-muted); font-style: italic; }
+        .cmd-arg { color: var(--accent-amber); }
+        .cmd-val { color: var(--accent-purple); }
+
+        .callout {
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .callout-info {
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--text-primary);
+        }
+
+        .callout-warning {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--text-primary);
+        }
+
+        .callout-icon {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .section-card { padding: 1.5rem; }
+            table { font-size: 0.85rem; }
+            th, td { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <div class="badge badge-emerald">🚀 Documentation Officielle — Plateforme K8s & Argo CD</div>
+        <h1>Guide Complet pour les Formateurs</h1>
+        <p class="subtitle">Architecture, accès SSH & K8s, comptes candidats et guide de manipulation Argo CD Web & CLI.</p>
+    </header>
+
+    <nav class="toc">
+        <h3>Table des Matières</h3>
+        <ul>
+            <li><a href="#infra">📌 1. Cartographie de l'Infrastructure & IP</a></li>
+            <li><a href="#formateurs">🔐 2. Accès Formateurs (Admin Cluster & Argo CD)</a></li>
+            <li><a href="#candidats">👥 3. Accès Candidats (efiadmin1 → 20)</a></li>
+            <li><a href="#argocd-guide">🛠️ 4. Guide Pratique Argo CD (CLI & Web)</a></li>
+            <li><a href="#workflow">🔄 5. Workflow Déploiement Exemple</a></li>
+            <li><a href="#depannage">🚨 6. Dépannage & Commandes Utiles</a></li>
+        </ul>
+    </nav>
+
+    <!-- SECTION 1: INFRASTRUCTURE -->
+    <section id="infra" class="section-card">
+        <div class="section-title">
+            <div class="icon">🖥️</div>
+            <h2>1. Cartographie de l'Infrastructure & IP</h2>
+        </div>
+
+        <p>L'infrastructure est composée de deux clusters Kubernetes distincts intégrés sous Argo CD :</p>
+
+        <h3 style="margin-top: 1.5rem; color: var(--accent-blue);">Cluster Principal « Revision » (Kubernetes v1.33.13)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nœud</th>
+                    <th>Nom d'hôte</th>
+                    <th>Adresse IP</th>
+                    <th>Rôle</th>
+                    <th>Ressources</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Master</strong></td>
+                    <td><code>kube-master-revision-m0</code></td>
+                    <td><code>172.16.3.10</code></td>
+                    <td>Control-Plane (API, etcd, Argo CD, Traefik)</td>
+                    <td>2 vCPU / 6 Go RAM / 30 Go SSD</td>
+                </tr>
+                <tr>
+                    <td><strong>Worker 1</strong></td>
+                    <td><code>kube-worker-revision-m1</code></td>
+                    <td><code>172.16.3.11</code></td>
+                    <td>Exécution Pods & Ingress Traefik</td>
+                    <td>2 vCPU / 6 Go RAM / 30 Go SSD</td>
+                </tr>
+                <tr>
+                    <td><strong>Worker 2</strong></td>
+                    <td><code>kube-worker-revision-m2</code></td>
+                    <td><code>172.16.3.12</code></td>
+                    <td>Exécution Pods & Ingress Traefik</td>
+                    <td>2 vCPU / 6 Go RAM / 30 Go SSD</td>
+                </tr>
+                <tr>
+                    <td><strong>Worker 3</strong></td>
+                    <td><code>kube-worker-revision-m3</code></td>
+                    <td><code>172.16.3.13</code></td>
+                    <td>Exécution Pods & Ingress Traefik</td>
+                    <td>2 vCPU / 6 Go RAM / 30 Go SSD</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 style="margin-top: 1.5rem; color: var(--accent-purple);">Cluster Secondaire (Kubernetes v1.28.15)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nœud</th>
+                    <th>Nom d'hôte</th>
+                    <th>Adresse IP</th>
+                    <th>Rôle</th>
+                    <th>Nom sous Argo CD</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Master 2</strong></td>
+                    <td><code>kube-master-g33-m0</code></td>
+                    <td><code>172.16.33.70</code></td>
+                    <td>Control-Plane Externe</td>
+                    <td><code>cluster-172-16-33-70</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Worker 2</strong></td>
+                    <td><code>kube-worker-g33-m0</code></td>
+                    <td><code>172.16.33.80</code></td>
+                    <td>Worker Externe</td>
+                    <td>Rattaché au cluster 33</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- SECTION 2: ACCÈS FORMATEURS -->
+    <section id="formateurs" class="section-card">
+        <div class="section-title">
+            <div class="icon">🔑</div>
+            <h2>2. Accès Formateurs (Administrateur Total)</h2>
+        </div>
+
+        <div class="grid-2">
+            <div class="info-box accent-blue">
+                <h4>Accès SSH & Kubernetes <span>root / efi</span></h4>
+                <p>Connexion direct SSH sur le Master Principal :</p>
+                <div class="code-block">
+                    <div class="code-header">SSH Formateur</div>
+                    <pre><code>ssh efi@172.16.3.10
+<span class="cmd-comment"># Mot de passe : efi</span>
+sudo -i <span class="cmd-comment"># Accès root total sans mot de passe</span></code></pre>
+                </div>
+                <p><small>Le fichier <code>/etc/kubernetes/admin.conf</code> donne les privilèges cluster-admin sans restriction.</small></p>
+            </div>
+
+            <div class="info-box accent-purple">
+                <h4>Accès Argo CD Web (Admin) <span>Interface Web</span></h4>
+                <p>Connexion à la console d'administration Argo CD :</p>
+                <ul>
+                    <li><strong>URL Web :</strong> <a href="https://172.16.3.10:30443" target="_blank" style="color:var(--accent-blue);">https://172.16.3.10:30443</a></li>
+                    <li><strong>Nom d'utilisateur :</strong> <code>admin</code></li>
+                    <li><strong>Mot de passe :</strong> <code>AdminEfi2026!</code></li>
+                </ul>
+                <p style="margin-top: 10px;"><small>Fichier de référence sur le Master : <code>/root/argocd-admin-password.txt</code></small></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: ACCÈS CANDIDATS -->
+    <section id="candidats" class="section-card">
+        <div class="section-title">
+            <div class="icon">👥</div>
+            <h2>3. Accès & Environnement Candidats (efiadmin1 → efiadmin20)</h2>
+        </div>
+
+        <p>20 comptes candidats totalement configurés avec isolation inter-candidats et droits complets dans leur périmètre :</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Mot de passe initial</th>
+                    <th>Namespace Dédié</th>
+                    <th>Projet Argo CD</th>
+                    <th>Accès & Restrictions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>efiadmin1</code></td>
+                    <td><code>efiadmin1</code></td>
+                    <td><code>efiadmin1-ns</code></td>
+                    <td><code>efiadmin1</code></td>
+                    <td>Admin de son espace, SSH avec changement de mot de passe obligatoire</td>
+                </tr>
+                <tr>
+                    <td><code>efiadmin2</code></td>
+                    <td><code>efiadmin2</code></td>
+                    <td><code>efiadmin2-ns</code></td>
+                    <td><code>efiadmin2</code></td>
+                    <td>Admin de son espace, SSH avec changement de mot de passe obligatoire</td>
+                </tr>
+                <tr>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                </tr>
+                <tr>
+                    <td><code>efiadmin20</code></td>
+                    <td><code>efiadmin20</code></td>
+                    <td><code>efiadmin20-ns</code></td>
+                    <td><code>efiadmin20</code></td>
+                    <td>Admin de son espace, SSH avec changement de mot de passe obligatoire</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout callout-info">
+            <div class="callout-icon">💡</div>
+            <div>
+                <strong>Règles de sécurité applicables aux candidats :</strong>
+                <ul style="margin-left: 20px; margin-top: 5px;">
+                    <li><strong>Connexion SSH :</strong> <code>ssh efiadminN@172.16.3.10</code>. À la 1re connexion, la modification du mot de passe est <strong>obligatoire</strong>.</li>
+                    <li><strong>Ressources autorisées :</strong> Création de Deployments, Services (ClusterIP, NodePort, LoadBalancer), PVC, Ingress, Pods, Namespaces personnels (ex: <code>lab-efiadmin1</code>).</li>
+                    <li><strong>Protection du travail des autres :</strong> Toute tentative de modifier/supprimer les ressources d'un collègue ou de la plateforme est bloquée par la règle <code>efi-tenant-protection</code>.</li>
+                    <li><strong>Accès Argo CD :</strong> Identifiants identiques (<code>efiadminN</code> / <code>efiadminN</code>). Chaque candidat ne voit et ne gère <strong>que ses propres applications</strong>.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: GUIDE PRATIQUE ARGO CD -->
+    <section id="argocd-guide" class="section-card">
+        <div class="section-title">
+            <div class="icon">🛠️</div>
+            <h2>4. Guide Pratique Argo CD (CLI & Web)</h2>
+        </div>
+
+        <p>Toutes les commandes nécessaires pour manipuler Argo CD en ligne de commande depuis le Master ou le poste de travail :</p>
+
+        <!-- Command 1: Login -->
+        <h3 style="margin-top: 1.5rem; color: var(--accent-blue);">1. Se connecter à Argo CD via la CLI</h3>
+        <div class="code-block">
+            <div class="code-header">Bash — Connexion Admin ou Candidat</div>
+            <pre><code><span class="cmd-comment"># Connexion en tant qu'Administrateur Formateur</span>
+argocd login 172.16.3.10:30443 --username admin --password <span class="cmd-val">AdminEfi2026!</span> --insecure --grpc-web
+
+<span class="cmd-comment"># Connexion en tant que Candidat (ex. efiadmin1)</span>
+argocd login 172.16.3.10:30443 --username efiadmin1 --password <span class="cmd-val">efiadmin1</span> --insecure --grpc-web</code></pre>
+        </div>
+
+        <!-- Command 2: Clusters & Projets -->
+        <h3 style="margin-top: 1.5rem; color: var(--accent-blue);">2. Lister les Clusters et les Projets</h3>
+        <div class="code-block">
+            <div class="code-header">Bash — Inspection des Clusters et AppProjects</div>
+            <pre><code><span class="cmd-comment"># Lister les clusters enregistrés sous Argo CD</span>
+argocd cluster list
+
+<span class="cmd-comment"># Lister les projets autorisés</span>
+argocd proj list</code></pre>
+        </div>
+
+        <!-- Command 3: Create App -->
+        <h3 style="margin-top: 1.5rem; color: var(--accent-blue);">3. Créer une Application Argo CD (CLI)</h3>
+        <p>Exemple complet pour créer une application dans le namespace du candidat sur le cluster local ou externe :</p>
+        <div class="code-block">
+            <div class="code-header">Bash — Création d'Application sur Cluster Local (in-cluster)</div>
+            <pre><code>argocd app create <span class="cmd-val">demo-guestbook</span> \
+  --repo <span class="cmd-val">https://github.com/argoproj/argocd-example-apps.git</span> \
+  --path <span class="cmd-val">guestbook</span> \
+  --dest-server <span class="cmd-val">https://kubernetes.default.svc</span> \
+  --dest-namespace <span class="cmd-val">efiadmin1-ns</span> \
+  --project <span class="cmd-val">efiadmin1</span></code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Bash — Création d'Application sur Cluster Secondaire (172.16.33.70)</div>
+            <pre><code>argocd app create <span class="cmd-val">demo-cluster33</span> \
+  --repo <span class="cmd-val">https://github.com/argoproj/argocd-example-apps.git</span> \
+  --path <span class="cmd-val">helm-guestbook</span> \
+  --dest-server <span class="cmd-val">https://172.16.33.70:6443</span> \
+  --dest-namespace <span class="cmd-val">efiadmin1-ns</span> \
+  --project <span class="cmd-val">efiadmin1</span></code></pre>
+        </div>
+
+        <!-- Command 4: Check Status -->
+        <h3 style="margin-top: 1.5rem; color: var(--accent-blue);">4. Vérifier l'état d'une Application</h3>
+        <div class="code-block">
+            <div class="code-header">Bash — Consultation du statut et des ressources</div>
+            <pre><code><span class="cmd-comment"># Lister toutes vos applications</span>
+argocd app list
+
+<span class="cmd-comment"># Obtenir le détail complet d'une application (Health, Sync Status, Arbre des ressources)</span>
+argocd app get <span class="cmd-val">demo-guestbook</span></code></pre>
+        </div>
+
+        <!-- Command 5: Sync & Auto-sync -->
+        <h3 style="margin-top: 1.5rem; color: var(--accent-blue);">5. Synchronisation Manuelle et Automatique (Auto-Sync)</h3>
+        <div class="code-block">
+            <div class="code-header">Bash — Lancer la synchronisation ou configurer l'Auto-Sync</div>
+            <pre><code><span class="cmd-comment"># 1. Déclencher une synchronisation manuelle</span>
+argocd app sync <span class="cmd-val">demo-guestbook</span>
+
+<span class="cmd-comment"># 2. Activer la synchronisation automatique (Auto-Sync)</span>
+argocd app set <span class="cmd-val">demo-guestbook</span> --sync-policy automated
+
+<span class="cmd-comment"># 3. Activer la suppression automatique (Auto-Prune) et l'auto-réparation (Self-Heal)</span>
+argocd app set <span class="cmd-val">demo-guestbook</span> --auto-prune --self-heal</code></pre>
+        </div>
+
+        <!-- Command 6: Logs & History -->
+        <h3 style="margin-top: 1.5rem; color: var(--accent-blue);">6. Consulter les Logs et l'Historique de déploiement</h3>
+        <div class="code-block">
+            <div class="code-header">Bash — Journaux et révisions</div>
+            <pre><code><span class="cmd-comment"># Afficher les logs d'un conteneur via Argo CD</span>
+argocd app logs <span class="cmd-val">demo-guestbook</span>
+
+<span class="cmd-comment"># Afficher l'historique des déploiements (Revisions)</span>
+argocd app history <span class="cmd-val">demo-guestbook</span></code></pre>
+        </div>
+
+        <!-- Command 7: Rollback & Delete -->
+        <h3 style="margin-top: 1.5rem; color: var(--accent-blue);">7. Rollback (Retour arrière) et Suppression</h3>
+        <div class="code-block">
+            <div class="code-header">Bash — Annulation et suppression</div>
+            <pre><code><span class="cmd-comment"># Revenir à une version antérieure (ex. ID 1)</span>
+argocd app rollback <span class="cmd-val">demo-guestbook</span> <span class="cmd-val">1</span>
+
+<span class="cmd-comment"># Supprimer une application</span>
+argocd app delete <span class="cmd-val">demo-guestbook</span></code></pre>
+        </div>
+    </section>
+
+    <!-- SECTION 5: WORKFLOW EXEMPLE -->
+    <section id="workflow" class="section-card">
+        <div class="section-title">
+            <div class="icon">🔄</div>
+            <h2>5. Workflow Exemple pour une Séance de Travail Pratique</h2>
+        </div>
+
+        <ol style="margin-left: 20px; line-height: 2;">
+            <li><strong>Le formateur distribue les identifiants :</strong> Candidat N ➔ <code>efiadminN</code> / <code>efiadminN</code>.</li>
+            <li><strong>Le candidat se connecte en SSH :</strong> <code>ssh efiadmin1@172.16.3.10</code> et change son mot de passe SSH.</li>
+            <li><strong>Le candidat se connecte sur Argo CD Web :</strong> <code>https://172.16.3.10:30443</code> avec son compte.</li>
+            <li><strong>Création d'une application Web sur Argo CD :</strong>
+                <ul>
+                    <li>Cliquer sur <strong>+ NEW APP</strong></li>
+                    <li><strong>Application Name :</strong> <code>mon-app</code></li>
+                    <li><strong>Project Name :</strong> <code>efiadmin1</code></li>
+                    <li><strong>Sync Policy :</strong> <code>Automatic</code> (ou <code>Manual</code>)</li>
+                    <li><strong>Repository URL :</strong> <code>https://github.com/argoproj/argocd-example-apps.git</code></li>
+                    <li><strong>Path :</strong> <code>guestbook</code></li>
+                    <li><strong>Cluster URL :</strong> <code>https://kubernetes.default.svc</code> (ou <code>https://172.16.33.70:6443</code>)</li>
+                    <li><strong>Namespace :</strong> <code>efiadmin1-ns</code></li>
+                </ul>
+            </li>
+            <li><strong>Validation :</strong> Cliquer sur <strong>CREATE</strong> puis <strong>SYNC</strong>. L'application passe au statut <strong>Synced / Healthy</strong>.</li>
+        </ol>
+    </section>
+
+    <!-- SECTION 6: DÉPANNAGE -->
+    <section id="depannage" class="section-card">
+        <div class="section-title">
+            <div class="icon">🚨</div>
+            <h2>6. Dépannage & Commandes de Secours (Formateurs)</h2>
+        </div>
+
+        <div class="callout callout-warning">
+            <div class="callout-icon">⚠️</div>
+            <div>
+                <strong>Actions d'urgence réservées au Formateur sur le Master :</strong>
+                <div class="code-block" style="margin-top: 10px;">
+                    <div class="code-header">Bash — Réinitialisation & Santé</div>
+                    <pre><code><span class="cmd-comment"># 1. Vérifier l'état global du cluster K8s</span>
+kubectl get nodes -o wide
+kubectl get pods -A | grep -v Running
+
+<span class="cmd-comment"># 2. Réinitialiser le mot de passe SSH d'un candidat (ex. efiadmin3)</span>
+passwd efiadmin3 && chage -d 0 efiadmin3
+
+<span class="cmd-comment"># 3. Réinitialiser la configuration Argo CD Multi-Tenants</span>
+/root/k8s-deploy/scripts/k8s-argocd-tenants.sh
+
+<span class="cmd-comment"># 4. Désactiver temporairement la politique de protection K8s en cas de blocage</span>
+kubectl delete validatingadmissionpolicybinding efi-tenant-protection
+
+<span class="cmd-comment"># 5. Réactiver la politique de protection K8s</span>
+kubectl apply -f /root/efi-tenant-protection.yaml</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Documentation Formateur Kubernetes v1.33 & Argo CD Multi-Tenants | Déployé & Validé le 10 Octobre 2026</p>
+    </footer>
+
+</div>
+
+<script>
+    // Copy code button script
+    document.querySelectorAll('.code-block').forEach(block => {
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.innerText = 'Copier';
+        const header = block.querySelector('.code-header');
+        if (header) {
+            header.appendChild(btn);
+            btn.addEventListener('click', () => {
+                const code = block.querySelector('code').innerText;
+                navigator.clipboard.writeText(code).then(() => {
+                    btn.innerText = 'Copié !';
+                    setTimeout(() => btn.innerText = 'Copier', 2000);
+                });
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
