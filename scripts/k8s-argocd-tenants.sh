@@ -30,7 +30,7 @@ EOF
 kubectl apply -f /tmp/argocd-cm-updated.yaml
 echo "argocd-cm mis à jour avec 20 comptes"
 
-step "2. Création des 20 AppProjects (efiadmin1..20)"
+step "2. Création/Mise à jour des 20 AppProjects (efiadmin1..20) pour les 2 clusters"
 for i in $(seq 1 20); do
   u="efiadmin$i"
   cat <<EOF | kubectl apply -f -
@@ -54,6 +54,14 @@ spec:
     server: 'https://kubernetes.default.svc'
   - namespace: 'lab-$u'
     server: 'https://kubernetes.default.svc'
+  - namespace: '$u-ns'
+    server: 'https://172.16.33.70:6443'
+  - namespace: '$u-*'
+    server: 'https://172.16.33.70:6443'
+  - namespace: '*-$u'
+    server: 'https://172.16.33.70:6443'
+  - namespace: 'lab-$u'
+    server: 'https://172.16.33.70:6443'
   clusterResourceWhitelist:
   - group: '*'
     kind: '*'
@@ -62,7 +70,7 @@ spec:
     kind: '*'
 EOF
 done
-echo "20 AppProjects créés"
+echo "20 AppProjects mis à jour pour autoriser in-cluster et cluster 172.16.33.70"
 
 step "3. Configuration de la politique RBAC dans argocd-rbac-cm"
 python3 - <<'EOF'
